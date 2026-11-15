@@ -83,6 +83,19 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
         $task->delete();
 
-        return redirect()->route('tasks.index')->with('success', 'Task successfully deleted!');
+        return redirect()->back()->with('success', 'Task successfully deleted!');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $task = Task::findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => 'required|in:not_started,in_progress,in_review,completed',
+        ]);
+
+        $task->update(['status' => $validated['status']]);
+
+        return redirect()->back()->with('success', 'Task status updated!');
     }
 }
